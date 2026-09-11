@@ -1,43 +1,51 @@
-/**
- * Modelo de Usuario (User).
- * Representa a las personas que acceden a la aplicación EFFIADMI.
- * @module models/User
- */
-
 const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema(
   {
-    // Nombre completo del usuario
     name: {
       type: String,
       required: true,
       trim: true,
     },
-    // Correo electrónico único para iniciar sesión
     email: {
       type: String,
       required: true,
       unique: true,
-      trim: true,
       lowercase: true,
+      trim: true,
     },
-    // Contraseña del usuario (encriptada en producción)
     password: {
       type: String,
       required: true,
     },
-    // Rol que determina los permisos dentro de la aplicación
     role: {
-      type: String,
-      enum: ['admin', 'empleado'],
-      default: 'empleado',
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Role',
+      required: true,
+    },
+    active: {
+      type: Boolean,
+      default: true,
     },
   },
-  {
-    // Agrega automáticamente los campos createdAt y updatedAt
-    timestamps: true,
-  }
+  { timestamps: true }
 );
+
+userSchema.pre('save', async function () {
+  if (!this.isModified('password')) return;
+  const salt = await bcrypt.genSalt(10);
+  this.password = await bcrypt.hash(this.password, salt);
+});
+
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+userSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  delete obj.password;
+  return obj;
+};
 
 module.exports = mongoose.model('User', userSchema);
