@@ -1,0 +1,106 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1><%= esAdmin ? 'Reportes del Equipo' : 'Mis Reportes' %></h1>
+    </div>
+
+    <% if (!esAdmin) { %>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Nuevo Reporte</h3>
+            </div>
+            <form method="POST" action="/reportes">
+                <div class="card-body">
+                    <div class="grid-2-col">
+                        <div class="form-group">
+                            <label for="titulo" class="form-label">Título</label>
+                            <input type="text" id="titulo" name="titulo" class="form-control"
+                                   placeholder="Ej: Solicitud de producto X" required maxlength="200">
+                        </div>
+                        <div class="form-group">
+                            <label for="tipo" class="form-label">Tipo</label>
+                            <select id="tipo" name="tipo" class="form-control" required>
+                                <% Object.keys(tipos).forEach(function(k) { %>
+                                    <option value="<%= k %>"><%= tipos[k] %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion" class="form-label">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" class="form-control" rows="4"
+                                  placeholder="Describe tu solicitud o reporte..." required></textarea>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Enviar Reporte</button>
+                </div>
+            </form>
+        </div>
+    <% } %>
+
+    <% if (esAdmin) { %>
+        <div class="card">
+            <div class="card-body">
+                <form method="GET" class="filtros-inventario">
+                    <div class="form-group">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select id="estado" name="estado" class="form-control" onchange="this.form.submit()">
+                            <option value="">Todos</option>
+                            <option value="pendiente" <%= filtroEstado === 'pendiente' ? 'selected' : '' %>>Pendientes</option>
+                            <option value="visto" <%= filtroEstado === 'visto' ? 'selected' : '' %>>Vistos</option>
+                            <option value="resuelto" <%= filtroEstado === 'resuelto' ? 'selected' : '' %>>Resueltos</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+    <% } %>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Tipo</th>
+                        <th>Título</th>
+                        <% if (esAdmin) { %><th>Usuario</th><% } %>
+                        <th>Estado</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% reportes.forEach(function(r) { %>
+                        <tr>
+                            <td><span class="texto-tipo"><%= tipos[r.tipo] || r.tipo %></span></td>
+                            <td><%= r.titulo %></td>
+                            <% if (esAdmin) { %>
+                                <td><%= r.usuario ? ((r.usuario.nombre + ' ' + r.usuario.apellido).trim() || r.usuario.username) : '-' %></td>
+                            <% } %>
+                            <td>
+                                <% if (r.estado === 'pendiente') { %>
+                                    <span class="reporte-estado pendiente">Pendiente</span>
+                                <% } else if (r.estado === 'visto') { %>
+                                    <span class="reporte-estado visto">Visto</span>
+                                <% } else { %>
+                                    <span class="reporte-estado resuelto">Resuelto</span>
+                                <% } %>
+                            </td>
+                            <td><%= fmtFecha(r.createdAt) %></td>
+                            <td>
+                                <a href="/reportes/<%= r._id %>/" class="btn btn-outline btn-sm">Ver</a>
+                            </td>
+                        </tr>
+                    <% }); %>
+                    <% if (reportes.length === 0) { %>
+                        <tr>
+                            <td colspan="<%= esAdmin ? 6 : 5 %>" class="tabla-vacia">
+                                No hay reportes<% if (esAdmin && filtroEstado) { %> con estado "<%= filtroEstado %>"<% } %>.
+                            </td>
+                        </tr>
+                    <% } %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

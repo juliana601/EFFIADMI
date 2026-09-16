@@ -1,0 +1,186 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Estadísticas IA</h1>
+        <span class="subtitulo-modulo">Métricas en tiempo real de EFFIADMI</span>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon ge-blue"><span class="material-symbols-outlined">category</span></div>
+            <div class="kpi-core">
+                <span class="kpi-tag">Productos</span>
+                <strong class="kpi-valor"><%= totales.productos %></strong>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon ge-green"><span class="material-symbols-outlined">attach_money</span></div>
+            <div class="kpi-core">
+                <span class="kpi-tag">Valor del Inventario</span>
+                <strong class="kpi-valor"><%= cop(inventario.valorInventario) %></strong>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon ge-teal"><span class="material-symbols-outlined">inventory</span></div>
+            <div class="kpi-core">
+                <span class="kpi-tag">Unidades Totales</span>
+                <strong class="kpi-valor"><%= inventario.unidadesTotales %></strong>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon ge-yellow"><span class="material-symbols-outlined">warning</span></div>
+            <div class="kpi-core">
+                <span class="kpi-tag">Productos Bajo Stock</span>
+                <strong class="kpi-valor"><%= inventario.productosBajos %></strong>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon ge-purple"><span class="material-symbols-outlined">group</span></div>
+            <div class="kpi-core">
+                <span class="kpi-tag">Clientes / Proveedores</span>
+                <strong class="kpi-valor"><%= totales.clientes %> / <%= totales.proveedores %></strong>
+            </div>
+        </div>
+        <div class="kpi-card">
+            <div class="kpi-icon ge-blue"><span class="material-symbols-outlined">trending_up</span></div>
+            <div class="kpi-core">
+                <span class="kpi-tag">Más Vendido</span>
+                <strong class="kpi-valor kpi-valor-sm"><%= productoMasVendido ? productoMasVendido.nombre + ' (' + productoMasVendido.unidades + ')' : 'Sin ventas' %></strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-layout">
+        <div class="stats-main">
+            <div class="card">
+                <div class="card-header"><h3>Reposición Sugerida</h3></div>
+                <div class="card-body">
+                    <% if (productosBajos.length > 0) { %>
+                        <% productosBajos.forEach(function(p) { %>
+                            <div class="repo-row var-warn">
+                                <strong><%= p.producto %></strong> — stock actual <%= p.cantidad_disponible %> / mínimo <%= p.stock_minimo %>
+                                <% if (p.sucursal) { %><span class="repo-sede">(<%= p.sucursal %>)</span><% } %>
+                            </div>
+                        <% }); %>
+                    <% } else { %>
+                        <p class="texto-sutil">Todos los productos están por encima de su stock mínimo. ¡Buen trabajo!</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-side">
+            <div class="card">
+                <div class="card-header"><h3>Movimientos de Inventario</h3></div>
+                <div class="card-body">
+                    <div class="chart-donut-wrap">
+                        <canvas id="canvasMovimientos"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header"><h3>Resumen</h3></div>
+                <div class="card-body">
+                    <div class="repo-row var-info"><span class="material-symbols-outlined">arrow_downward</span> Entradas: <%= movimientos.entradas %></div>
+                    <div class="repo-row var-info"><span class="material-symbols-outlined">arrow_upward</span> Salidas: <%= movimientos.salidas %></div>
+                    <div class="repo-row var-info"><span class="material-symbols-outlined">manage_accounts</span> Usuarios: <%= totales.usuarios %></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" style="margin-top: 24px;">
+        <div class="card-header"><h3>Ventas por Producto (Top 6)</h3></div>
+        <div class="card-body">
+            <div class="chart-bar-wrap">
+                <canvas id="canvasVentas"></canvas>
+            </div>
+            <% if (ventasRows.length === 0) { %>
+                <p class="texto-sutil">Aún no hay ventas registradas.</p>
+            <% } %>
+        </div>
+    </div>
+
+    <div style="margin-top: 24px;">
+        <div class="card">
+            <div class="card-header"><h3>Resumen del Negocio</h3></div>
+            <div class="card-body">
+                <div class="stats-resumen-grid">
+                    <div class="stats-resumen-box">
+                        <h4><span class="material-symbols-outlined">inventory</span> Inventario General</h4>
+                        <p>Productos registrados: <strong><%= totales.productos %></strong></p>
+                        <p>Unidades totales: <strong><%= inventario.unidadesTotales %></strong></p>
+                        <p>Valor total inventario: <strong><%= cop(inventario.valorInventario) %></strong></p>
+                        <p>Productos bajo stock: <strong class="<%= inventario.productosBajos ? 'txt-warn' : 'txt-ok' %>"><%= inventario.productosBajos %></strong></p>
+                    </div>
+                    <div class="stats-resumen-box">
+                        <h4><span class="material-symbols-outlined">point_of_sale</span> Facturación</h4>
+                        <p>Facturas emitidas: <strong><%= totales.facturas %></strong></p>
+                        <p>Más vendido: <strong><%= productoMasVendido ? productoMasVendido.nombre : '-' %></strong></p>
+                        <p>Unidades vendidas: <strong><%= productoMasVendido ? productoMasVendido.unidades : '0' %></strong></p>
+                        <p>Total facturado: <strong><%= cop(ventasFacturadoTotal) %></strong></p>
+                    </div>
+                    <div class="stats-resumen-box">
+                        <h4><span class="material-symbols-outlined">group</span> Contactos</h4>
+                        <p>Clientes registrados: <strong><%= totales.clientes %></strong></p>
+                        <p>Proveedores registrados: <strong><%= totales.proveedores %></strong></p>
+                        <p>Usuarios activos: <strong><%= totales.usuarios %></strong></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    (function () {
+        try {
+            const ctxMov = document.getElementById('canvasMovimientos');
+            if (ctxMov) {
+                new Chart(ctxMov, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Entradas', 'Salidas'],
+                        datasets: [{
+                            data: [<%= movimientos.entradas %>, <%= movimientos.salidas %>],
+                            backgroundColor: ['#10b981', '#ef4444'],
+                            borderWidth: 2,
+                            borderColor: '#ffffff'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { position: 'bottom', labels: { boxWidth: 12, font: { size: 12 } } } }
+                    }
+                });
+            }
+        } catch (e) { console.warn('Chart no disponible:', e); }
+
+        try {
+            const ctxVentas = document.getElementById('canvasVentas');
+            if (ctxVentas) {
+                const datos = <%- ventasChart %>;
+                new Chart(ctxVentas, {
+                    type: 'bar',
+                    data: {
+                        labels: datos.map(function (d) { return d.nombre; }),
+                        datasets: [{
+                            label: 'Unidades vendidas',
+                            data: datos.map(function (d) { return d.totalVendido; }),
+                            backgroundColor: 'rgba(139, 92, 246, 0.75)',
+                            borderRadius: 6
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { precision: 0 } }
+                        }
+                    }
+                });
+            }
+        } catch (e) { console.warn('Chart no disponible:', e); }
+    })();
+</script>

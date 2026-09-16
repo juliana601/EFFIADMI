@@ -1,0 +1,80 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Detalle del Reporte</h1>
+        <a href="/reportes" class="btn btn-outline">Volver</a>
+    </div>
+
+    <div class="card">
+        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <h3 class="card-title"><%= reporte.titulo %></h3>
+            <% if (reporte.estado === 'pendiente') { %>
+                <span class="reporte-estado pendiente">Pendiente</span>
+            <% } else if (reporte.estado === 'visto') { %>
+                <span class="reporte-estado visto">Visto</span>
+            <% } else { %>
+                <span class="reporte-estado resuelto">Resuelto</span>
+            <% } %>
+        </div>
+        <div class="card-body">
+            <div class="detalle-grid">
+                <div>
+                    <p class="campo-etiqueta">Tipo</p>
+                    <p><%= tipos[reporte.tipo] || reporte.tipo %></p>
+                </div>
+                <div>
+                    <p class="campo-etiqueta">Enviado por</p>
+                    <p>
+                        <%= reporte.usuario ? ((reporte.usuario.nombre + ' ' + reporte.usuario.apellido).trim() || reporte.usuario.username) : '-' %>
+                        <% if (reporte.usuario && reporte.usuario.email) { %>(<%= reporte.usuario.email %>)<% } %>
+                    </p>
+                </div>
+            </div>
+            <div style="margin: 16px 0;">
+                <p class="campo-etiqueta">Fecha de creación</p>
+                <p><%= fmtFecha(reporte.createdAt) %></p>
+            </div>
+            <div>
+                <p class="campo-etiqueta">Descripción</p>
+                <p class="texto-pre-wrap"><%= reporte.descripcion %></p>
+            </div>
+
+            <% if (reporte.respuesta) { %>
+                <div class="respuesta-admin">
+                    <p class="campo-etiqueta">Respuesta del Administrador</p>
+                    <p class="texto-pre-wrap"><%= reporte.respuesta %></p>
+                    <% if (reporte.fecha_respuesta) { %>
+                        <p class="respuesta-fecha"><%= fmtFecha(reporte.fecha_respuesta) %></p>
+                    <% } %>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+    <% if (esAdmin) { %>
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title">Responder al Reporte</h3>
+            </div>
+            <form method="POST" action="/reportes/<%= reporte._id %>/">
+                <div class="card-body">
+                    <div class="form-group" style="margin-bottom: 16px;">
+                        <label for="estado" class="form-label">Estado</label>
+                        <select id="estado" name="estado" class="form-control">
+                            <option value="pendiente" <%= reporte.estado === 'pendiente' ? 'selected' : '' %>>Pendiente</option>
+                            <option value="visto" <%= reporte.estado === 'visto' ? 'selected' : '' %>>Visto</option>
+                            <option value="resuelto" <%= reporte.estado === 'resuelto' ? 'selected' : '' %>>Resuelto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="respuesta" class="form-label">Respuesta</label>
+                        <textarea id="respuesta" name="respuesta" class="form-control" rows="4"
+                                  placeholder="Escribe tu respuesta..."><%= reporte.respuesta %></textarea>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Guardar Respuesta</button>
+                </div>
+            </form>
+        </div>
+    <% } %>
+</section>

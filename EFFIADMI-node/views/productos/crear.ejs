@@ -1,0 +1,73 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Nuevo Producto</h1>
+        <a href="/productos" class="btn btn-outline">Volver</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="/productos/crear">
+                <div class="form-group">
+                    <label for="sku" class="form-label">ID</label>
+                    <input type="text" id="sku" name="sku" class="form-control" value="<%= proximoId %>" readonly>
+                    <small class="form-help">El sistema asigna automáticamente este ID al producto. No se puede editar.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" class="form-control" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria" class="form-label">Categoría</label>
+                    <select id="categoria" name="categoria" class="form-control" required>
+                        <option value="">-- Seleccionar categoría --</option>
+                        <% categorias.forEach(function(cat) { %>
+                            <option value="<%= cat._id %>"><%= cat.nombre %></option>
+                        <% }); %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="precio_venta" class="form-label">Precio Venta (COP)</label>
+                    <input type="number" id="precio_venta" name="precio_venta" class="form-control"
+                           step="1" min="1000" max="100000000" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="sucursal" class="form-label">Sucursal</label>
+                    <select id="sucursal" name="sucursal" class="form-control">
+                        <option value="">-- Seleccionar sucursal --</option>
+                        <% sucursales.forEach(function(s) { %>
+                            <option value="<%= s._id %>" <%= s.es_principal ? 'selected' : '' %>>
+                                <%= s.nombre %><% if (s.es_principal) { %> (Principal)<% } %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="stock_inicial" class="form-label">Stock Inicial</label>
+                    <input type="number" id="stock_inicial" name="stock_inicial" class="form-control"
+                           value="0" min="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="stock_minimo" class="form-label">Stock Mínimo</label>
+                    <input type="number" id="stock_minimo" name="stock_minimo" class="form-control"
+                           value="5" min="0">
+                </div>
+
+                <div class="card-footer">
+                    <a href="/productos" class="btn btn-outline">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

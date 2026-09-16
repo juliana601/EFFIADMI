@@ -1,0 +1,76 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Factura #<%= factura.numero %></h1>
+        <a href="/facturas" class="btn btn-outline">Volver</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="detalle-grid">
+                <div>
+                    <p><strong>Cliente:</strong> <%= factura.cliente ? factura.cliente.nombre : '-' %></p>
+                    <p><strong>Correo:</strong> <%= factura.cliente ? factura.cliente.correo : '-' %></p>
+                    <p><strong>Teléfono:</strong> <%= factura.cliente ? factura.cliente.telefono : '-' %></p>
+                </div>
+                <div>
+                    <p><strong>Fecha:</strong> <%= fmtFecha(factura.createdAt) %></p>
+                    <p><strong>Usuario:</strong> <%= factura.usuario ? (factura.usuario.username || factura.usuario.nombre) : 'Sistema' %></p>
+                    <p><strong>Pedido:</strong>
+                        <% if (factura.pedido) { %>
+                            <a href="/pedidos/<%= factura.pedido._id %>/">PED-<%= factura.pedido.numero %></a>
+                        <% } else { %>-<% } %>
+                    </p>
+                    <p><strong>Estado:</strong>
+                        <% if (factura.estado === 'emitida') { %>
+                            <span class="factura-estado emitida">Emitida</span>
+                        <% } else { %>
+                            <span class="factura-estado anulada">Anulada</span>
+                        <% } %>
+                    </p>
+                </div>
+            </div>
+
+            <div class="detalle-productos">
+                <h3>Productos</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% detalles.forEach(function(det) { %>
+                            <tr>
+                                <td><%= det.producto ? det.producto.nombre : 'Producto eliminado' %></td>
+                                <td><%= det.cantidad %></td>
+                                <td><%= cop(det.precio_unitario) %></td>
+                                <td><%= cop(det.subtotal) %></td>
+                            </tr>
+                        <% }); %>
+                        <% if (detalles.length === 0) { %>
+                            <tr>
+                                <td colspan="4" class="tabla-vacia">Esta factura no tiene productos.</td>
+                            </tr>
+                        <% } %>
+                    </tbody>
+                </table>
+                <div class="detalle-total">
+                    <span class="label-total">Total:</span>
+                    <strong class="total-pedido-valor"><%= cop(factura.total) %></strong>
+                </div>
+            </div>
+        </div>
+
+        <% if (factura.estado === 'emitida' && session.rol === 'admin') { %>
+            <div class="card-footer">
+                <form method="POST" action="/facturas/<%= factura._id %>/anular" class="inline-form"
+                      onsubmit="return confirm('Anular esta factura?');">
+                    <button type="submit" class="btn btn-outline btn-danger-text">Anular Factura</button>
+                </form>
+            </div>
+        <% } %>
+    </div>
+</section>

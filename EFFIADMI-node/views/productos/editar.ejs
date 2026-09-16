@@ -1,0 +1,62 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Editar Producto</h1>
+        <a href="/productos" class="btn btn-outline">Volver</a>
+    </div>
+
+    <div class="card">
+        <form method="POST" action="/productos/<%= producto._id %>/eliminar" class="estado-from-card"
+              onsubmit="return confirm('¿Estás seguro de eliminar el producto \'<%= producto.nombre %>\'? Si tiene historial asociado se desactivará.');">
+            <div class="card-header">
+                <% if (producto.activo) { %>
+                    <button type="submit" class="btn btn-outline btn-sm btn-danger-text">Eliminar producto</button>
+                <% } else { %>
+                    <button type="submit" class="btn btn-outline btn-sm btn-success-text">Activar producto</button>
+                <% } %>
+            </div>
+        </form>
+        <form method="POST" action="/productos/<%= producto._id %>/editar">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="sku" class="form-label">ID</label>
+                    <input type="text" id="sku" name="sku" class="form-control" value="<%= producto.sku %>" readonly>
+                    <small class="form-help">El ID es asignado automáticamente y no se puede editar.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" value="<%= producto.nombre %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="descripcion" class="form-label">Descripción</label>
+                    <textarea id="descripcion" name="descripcion" class="form-control" rows="3"><%= producto.descripcion %></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoria" class="form-label">Categoría</label>
+                    <select id="categoria" name="categoria" class="form-control">
+                        <option value="">-- Sin categoría --</option>
+                        <% categorias.forEach(function(cat) { %>
+                            <option value="<%= cat._id %>"
+                                    <%= producto.categoria && producto.categoria._id && producto.categoria._id.toString() === cat._id.toString() ? 'selected' : '' %>>
+                                <%= cat.nombre %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="precio_venta" class="form-label">Precio Venta (COP)</label>
+                    <input type="number" id="precio_venta" name="precio_venta" class="form-control"
+                           step="1" min="1000" max="100000000" value="<%= producto.precio_venta %>" required>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a href="/productos" class="btn btn-outline">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+        </form>
+    </div>
+</section>

@@ -1,0 +1,22 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Editar Categoría</h1>
+        <a href="/categorias" class="btn btn-outline">Volver</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="POST" action="/categorias/<%= categoria._id %>/editar">
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre de la categoría</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control"
+                           value="<%= categoria.nombre %>" required>
+                </div>
+                <div class="card-footer">
+                    <a href="/categorias" class="btn btn-outline">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

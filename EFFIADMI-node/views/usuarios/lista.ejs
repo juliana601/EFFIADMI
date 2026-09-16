@@ -1,0 +1,52 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Listado de Usuarios</h1>
+        <a href="/usuarios/crear" class="btn btn-primary">+ Nuevo Usuario</a>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Cargo</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% usuarios.forEach(function(usuario) { %>
+                    <tr>
+                        <td><%= usuario.nombre %> <%= usuario.apellido %></td>
+                        <td><%= usuario.email %></td>
+                        <td><span class="badge-rol <%= usuario.rol %>"><%= usuario.rol %></span></td>
+                        <td>
+                            <% if (usuario.activo) { %>
+                                <span class="estado activo">Activo</span>
+                            <% } else { %>
+                                <span class="estado inactivo">Inactivo</span>
+                            <% } %>
+                        </td>
+                        <td class="acciones">
+                            <a href="/usuarios/<%= usuario._id %>/editar" class="btn btn-outline btn-sm">Editar</a>
+                            <form method="POST" action="/usuarios/<%= usuario._id %>/estado" class="inline-form"
+                                  onsubmit="return confirm('Desactivar este usuario?');">
+                                <% if (usuario.activo && usuario._id.toString() !== session.id.toString()) { %>
+                                    <button type="submit" class="btn btn-outline btn-sm btn-danger-text">Desactivar</button>
+                                <% } else if (!usuario.activo) { %>
+                                    <button type="submit" class="btn btn-outline btn-sm btn-success-text">Activar</button>
+                                <% } %>
+                            </form>
+                        </td>
+                    </tr>
+                <% }); %>
+                <% if (usuarios.length === 0) { %>
+                    <tr>
+                        <td colspan="5" class="tabla-vacia">No hay usuarios registrados.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</section>

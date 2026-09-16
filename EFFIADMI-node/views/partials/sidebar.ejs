@@ -1,0 +1,73 @@
+<aside class="app-sidebar">
+    <div class="sidebar-brand">
+        <a href="/auth/dashboard" class="brand-container">
+            <img src="/img/logoeffiadmi_1.png" alt="EFFIADMI" class="brand-logo">
+            <span>EFFIADMI</span>
+        </a>
+    </div>
+
+    <nav class="sidebar-menu">
+        <% if (session) { %>
+            <a href="/auth/perfil" class="menu-link">
+                <span class="material-symbols-outlined">account_circle</span> Perfil
+            </a>
+            <a href="/auth/dashboard" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'dashboard' ? 'active' : '' %>">
+                <span class="material-symbols-outlined">dashboard</span> Inicio
+            </a>
+            <a href="/inventario" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'inventario' ? 'active' : '' %>">
+                <span class="material-symbols-outlined">inventory_2</span> Inventario
+            </a>
+            <a href="/productos" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'productos' ? 'active' : '' %>">
+                <span class="material-symbols-outlined">category</span> Productos
+            </a>
+            <% if (session.rol === 'admin') { %>
+                <a href="/categorias" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'categorias' ? 'active' : '' %>">
+                    <span class="material-symbols-outlined">sell</span> Categorías
+                </a>
+            <% } %>
+            <a href="/pedidos" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'pedidos' ? 'active' : '' %>">
+                <span class="material-symbols-outlined">shopping_cart</span> Pedidos
+            </a>
+            <a href="/clientes" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'clientes' ? 'active' : '' %>">
+                <span class="material-symbols-outlined">group</span> Clientes
+            </a>
+            <a href="/proveedores" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'proveedores' ? 'active' : '' %>">
+                <span class="material-symbols-outlined">local_shipping</span> Proveedores
+            </a>
+            <a href="/facturas" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'facturas' ? 'active' : '' %>">
+                <span class="material-symbols-outlined">description</span> Facturación
+            </a>
+            <% if (session.rol === 'admin') { %>
+                <a href="/estadisticas" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'estadisticas' ? 'active' : '' %>">
+                    <span class="material-symbols-outlined">psychology</span> Estadísticas IA
+                </a>
+            <% } %>
+            <a href="/reportes" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'reportes' ? 'active' : '' %>">
+                <span class="material-symbols-outlined">feedback</span> Reportes
+            </a>
+            <a href="/notificaciones" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'notificaciones' ? 'active' : '' %>">
+                <span class="material-symbols-outlined">notifications</span> Notificaciones
+            </a>
+            <% if (session.rol === 'admin') { %>
+                <a href="/usuarios" class="menu-link <%= typeof rutaActiva !== 'undefined' && rutaActiva === 'usuarios' ? 'active' : '' %>">
+                    <span class="material-symbols-outlined">manage_accounts</span> Usuarios
+                </a>
+            <% } %>
+        <% } else { %>
+            <a href="/auth/login" class="menu-link active">
+                <span class="material-symbols-outlined">login</span> Iniciar Sesión
+            </a>
+            <a href="/auth/registro" class="menu-link">
+                <span class="material-symbols-outlined">person_add</span> Crear cuenta
+            </a>
+        <% } %>
+    </nav>
+
+    <div class="sidebar-footer">
+        <% if (session) { %>
+            <a href="/auth/logout" class="menu-link logout-btn">
+                <span class="material-symbols-outlined">logout</span> Cerrar Sesión
+            </a>
+        <% } %>
+    </div>
+</aside>

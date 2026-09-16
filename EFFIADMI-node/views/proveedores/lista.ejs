@@ -1,0 +1,73 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Listado de Proveedores</h1>
+        <% if (session.rol === 'admin') { %>
+            <a href="/proveedores/crear" class="btn btn-primary">+ Nuevo Proveedor</a>
+        <% } %>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="GET" class="filtros-inventario">
+                <div class="form-group">
+                    <label for="estado" class="form-label">Estado</label>
+                    <select id="estado" name="estado" class="form-control" onchange="this.form.submit()">
+                        <option value="">Todos</option>
+                        <option value="activo" <%= filtroEstado === 'activo' ? 'selected' : '' %>>Activos</option>
+                        <option value="inactivo" <%= filtroEstado === 'inactivo' ? 'selected' : '' %>>Inactivos</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% proveedores.forEach(function(proveedor) { %>
+                    <tr>
+                        <td><%= proveedor.nombre %></td>
+                        <td><%= proveedor.correo %></td>
+                        <td><%= proveedor.telefono %></td>
+                        <td><%= proveedor.direccion %></td>
+                        <td>
+                            <% if (proveedor.activo) { %>
+                                <span class="estado activo">Activo</span>
+                            <% } else { %>
+                                <span class="estado inactivo">Inactivo</span>
+                            <% } %>
+                        </td>
+                        <td class="acciones">
+                            <a href="/proveedores/<%= proveedor._id %>/editar" class="btn btn-outline btn-sm">Editar</a>
+                            <% if (session.rol === 'admin') { %>
+                                <form method="POST" action="/proveedores/<%= proveedor._id %>/eliminar" class="inline-form"
+                                      onsubmit="return confirm('¿Estás seguro de <%= proveedor.activo ? 'desactivar' : 'activar' %> el proveedor \'<%= proveedor.nombre %>\'?');">
+                                    <button type="submit" class="btn btn-outline btn-sm <%= proveedor.activo ? 'btn-danger-text' : 'btn-success-text' %>">
+                                        <%= proveedor.activo ? 'Desactivar' : 'Activar' %>
+                                    </button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }); %>
+                <% if (proveedores.length === 0) { %>
+                    <tr>
+                        <td colspan="6" class="tabla-vacia">
+                            No hay proveedores <% if (filtroEstado) { %>con estado "<%= filtroEstado %>"<% } %> registrados.
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</section>

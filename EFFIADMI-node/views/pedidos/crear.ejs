@@ -1,0 +1,122 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Crear Pedido</h1>
+        <a href="/pedidos" class="btn btn-outline">Volver</a>
+    </div>
+
+    <div class="card">
+        <form method="POST" action="/pedidos/crear" id="formPedido">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="cliente" class="form-label">Cliente</label>
+                    <select id="cliente" name="cliente" class="form-control" required>
+                        <option value="">Selecciona un cliente</option>
+                        <% clientes.forEach(function(c) { %>
+                            <option value="<%= c._id %>"><%= c.nombre %> - <%= c.correo %></option>
+                        <% }); %>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="productos-head">
+                        <label class="form-label" style="margin: 0;">Productos</label>
+                        <button type="button" class="btn btn-outline btn-sm" onclick="agregarProducto()">+ Agregar producto</button>
+                    </div>
+
+                    <table class="table" id="tablaProductos">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th style="width: 110px;">Cantidad</th>
+                                <th style="width: 130px;">Precio</th>
+                                <th style="width: 130px;">Subtotal</th>
+                                <th style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoProductos">
+                        </tbody>
+                    </table>
+                    <p id="mensajeVacio" class="tabla-vacia">Haz clic en "+ Agregar producto" para comenzar.</p>
+                </div>
+
+                <div class="total-pedido">
+                    <div style="text-align: right;">
+                        <span class="label-total">Total:</span>
+                        <h2 id="totalPedido" class="total-pedido-valor">$ 0</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <a href="/pedidos" class="btn btn-outline">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Crear Pedido</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    const PRODUCTOS = <%- JSON.stringify(productos.map(p => ({ _id: p._id, nombre: p.nombre, precio_venta: p.precio_venta }))) %>;
+    let contador = 0;
+
+    function formatoCOP(num) {
+        return "$ " + Math.round(Number(num) || 0).toLocaleString("es-CO");
+    }
+
+    function agregarProducto() {
+        contador++;
+        const tbody = document.getElementById("cuerpoProductos");
+        const fila = document.createElement("tr");
+        fila.id = "fila-" + contador;
+
+        let opciones = '<option value="">Selecciona...</option>';
+        for (const p of PRODUCTOS) {
+            opciones += '<option value="' + p._id + '" data-precio="' + p.precio_venta + '">' + p.nombre + ' - ' + formatoCOP(p.precio_venta) + '</option>';
+        }
+
+        fila.innerHTML =
+            '<td><select name="producto" class="form-control" required onchange="actualizarPrecio(this)">' + opciones + '</select></td>' +
+            '<td><input type="number" name="cantidad" class="form-control" min="1" value="1" required oninput="calcularSubtotal(this)"></td>' +
+            '<td><span class="precio-unitario">$ 0</span><input type="hidden" name="precio_unitario"></td>' +
+            '<td><span class="subtotal-fila">$ 0</span></td>' +
+            '<td><button type="button" class="btn btn-outline btn-sm btn-danger-text" onclick="eliminarProducto(' + contador + ')" title="Eliminar">&times;</button></td>';
+
+        tbody.appendChild(fila);
+        document.getElementById("mensajeVacio").style.display = "none";
+    }
+
+    function eliminarProducto(id) {
+        const fila = document.getElementById("fila-" + id);
+        if (fila) fila.remove();
+        calcularTotal();
+        if (document.getElementById("cuerpoProductos").children.length === 0) {
+            document.getElementById("mensajeVacio").style.display = "block";
+        }
+    }
+
+    function actualizarPrecio(select) {
+        const fila = select.closest("tr");
+        const option = select.options[select.selectedIndex];
+        const precio = option.getAttribute("data-precio") || 0;
+        fila.querySelector(".precio-unitario").textContent = formatoCOP(precio);
+        fila.querySelector('input[name="precio_unitario"]').value = precio;
+        calcularSubtotal(select);
+    }
+
+    function calcularSubtotal(el) {
+        const fila = el.closest("tr");
+        const precio = parseFloat(fila.querySelector('input[name="precio_unitario"]').value) || 0;
+        const cantidad = parseInt(fila.querySelector('input[name="cantidad"]').value) || 0;
+        const subtotal = precio * cantidad;
+        fila.querySelector(".subtotal-fila").textContent = formatoCOP(subtotal);
+        calcularTotal();
+    }
+
+    function calcularTotal() {
+        let total = 0;
+        document.querySelectorAll(".subtotal-fila").forEach(function (el) {
+            total += parseFloat(el.textContent.replace(/[^0-9.-]/g, "")) || 0;
+        });
+        document.getElementById("totalPedido").textContent = formatoCOP(total);
+    }
+</script>

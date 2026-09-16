@@ -1,0 +1,61 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Listado de Productos</h1>
+        <div>
+            <a href="/productos<%= mostrarInactivos ? '' : '?inactivos=1' %>" class="btn btn-outline">
+                <%= mostrarInactivos ? 'Ver activos' : 'Ver inactivos' %>
+            </a>
+            <% if (session.rol === 'admin') { %>
+                <a href="/productos/crear" class="btn btn-primary">+ Nuevo Producto</a>
+            <% } %>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Precio Venta</th>
+                    <th>Stock Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% productos.forEach(function(item) { %>
+                    <tr>
+                        <td><%= item.producto.sku %></td>
+                        <td><%= item.producto.nombre %></td>
+                        <td><%= item.producto.categoria ? item.producto.categoria.nombre : '-' %></td>
+                        <td>$ <%= Number(item.producto.precio_venta).toLocaleString('es-CO') %></td>
+                        <td><%= item.stock %></td>
+                        <td>
+                            <% if (item.producto.activo) { %>
+                                <span class="estado activo">Activo</span>
+                            <% } else { %>
+                                <span class="estado inactivo">Inactivo</span>
+                            <% } %>
+                        </td>
+                        <td class="acciones">
+                            <a href="/productos/<%= item.producto._id %>/editar" class="btn btn-outline btn-sm">Editar</a>
+                            <% if (session.rol === 'admin') { %>
+                                <form method="POST" action="/productos/<%= item.producto._id %>/eliminar" class="inline-form"
+                                      onsubmit="return confirm('¿Estás seguro de eliminar el producto \'<%= item.producto.nombre %>\'? Esta acción no se puede deshacer.');">
+                                    <button type="submit" class="btn btn-outline btn-sm btn-danger-text">Eliminar</button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }); %>
+                <% if (productos.length === 0) { %>
+                    <tr>
+                        <td colspan="7" class="tabla-vacia">No hay productos registrados.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</section>

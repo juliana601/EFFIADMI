@@ -1,0 +1,53 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1><%= cliente ? 'Editar Cliente' : 'Nuevo Cliente' %></h1>
+        <a href="/clientes" class="btn btn-outline">Volver</a>
+    </div>
+
+    <div class="card">
+        <form method="POST" action="<%= cliente ? '/clientes/' + cliente._id + '/editar' : '/clientes/crear' %>">
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="nombre" class="form-label">Nombre</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control"
+                           value="<%= cliente ? cliente.nombre : '' %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="correo" class="form-label">Correo</label>
+                    <input type="email" id="correo" name="correo" class="form-control"
+                           value="<%= cliente ? cliente.correo : '' %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono" class="form-label">Teléfono</label>
+                    <input type="text" id="telefono" name="telefono" class="form-control"
+                           value="<%= cliente ? cliente.telefono : '' %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="direccion" class="form-label">Dirección</label>
+                    <input type="text" id="direccion" name="direccion" class="form-control"
+                           value="<%= cliente ? cliente.direccion : '' %>" required>
+                </div>
+            </div>
+
+            <div class="card-footer">
+                <% if (cliente) { %>
+                    <form method="POST" action="/clientes/<%= cliente._id %>/estado" class="inline-form"
+                          onsubmit="return confirm('<%= cliente.activo ? 'Desactivar' : 'Activar' %> este cliente?');">
+                        <% if (cliente.activo) { %>
+                            <button type="submit" class="btn btn-outline btn-danger-text">Desactivar</button>
+                        <% } else { %>
+                            <button type="submit" class="btn btn-outline btn-success-text">Activar</button>
+                        <% } %>
+                    </form>
+                <% } %>
+                <div>
+                    <a href="/clientes" class="btn btn-outline">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>

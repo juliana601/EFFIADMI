@@ -1,0 +1,56 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Órdenes de Pedido</h1>
+        <a href="/pedidos/crear" class="btn btn-primary">+ Nuevo Pedido</a>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#Pedido</th>
+                    <th>Cliente</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pedidos.forEach(function(pedido) { %>
+                    <tr>
+                        <td>PED-<%= pedido.numero %></td>
+                        <td><%= pedido.cliente ? pedido.cliente.nombre : '-' %></td>
+                        <td><%= fmtFecha(pedido.createdAt) %></td>
+                        <td><%= cop(pedido.total) %></td>
+                        <td>
+                            <% if (pedido.estado === 'pendiente') { %>
+                                <span class="estado-pedido pendiente">Pendiente</span>
+                            <% } else if (pedido.estado === 'confirmado') { %>
+                                <span class="estado-pedido confirmado">Confirmado</span>
+                            <% } else if (pedido.estado === 'pagado') { %>
+                                <span class="estado-pedido pagado">Pagado</span>
+                            <% } else { %>
+                                <span class="estado-pedido cancelado">Cancelado</span>
+                            <% } %>
+                        </td>
+                        <td class="acciones">
+                            <a href="/pedidos/<%= pedido._id %>/" class="btn btn-outline btn-sm">Ver</a>
+                            <% if (pedido.estado === 'pendiente' && session.rol === 'admin') { %>
+                                <form method="POST" action="/pedidos/<%= pedido._id %>/eliminar" class="inline-form"
+                                      onsubmit="return confirm('Eliminar este pedido?');">
+                                    <button type="submit" class="btn btn-outline btn-sm btn-danger-text">Eliminar</button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }); %>
+                <% if (pedidos.length === 0) { %>
+                    <tr>
+                        <td colspan="6" class="tabla-vacia">No hay pedidos registrados.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</section>

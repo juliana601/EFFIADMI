@@ -1,0 +1,77 @@
+<section class="login-page">
+    <div class="login-panel">
+        <div class="login-form-wrap">
+            <h2>Crear cuenta</h2>
+            <p>Regístrate para acceder al sistema EFFIADMI.</p>
+
+            <% if (typeof errores !== 'undefined' && errores.general) { %>
+                <div class="alert alert-error"><%= errores.general %></div>
+            <% } %>
+
+            <form method="post" action="/auth/registro" autocomplete="off">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nombre" class="form-label">Nombre</label>
+                        <input type="text" name="nombre" id="nombre"
+                               class="form-control <%= (typeof errores !== 'undefined' && errores.nombre) ? 'invalid' : '' %>"
+                               placeholder="Tu nombre"
+                               value="<%= (typeof valores !== 'undefined' && valores.nombre) ? valores.nombre : '' %>">
+                        <% if (typeof errores !== 'undefined' && errores.nombre) { %>
+                            <span class="form-error"><%= errores.nombre %></span>
+                        <% } %>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="apellido" class="form-label">Apellido</label>
+                        <input type="text" name="apellido" id="apellido"
+                               class="form-control <%= (typeof errores !== 'undefined' && errores.apellido) ? 'invalid' : '' %>"
+                               placeholder="Tu apellido"
+                               value="<%= (typeof valores !== 'undefined' && valores.apellido) ? valores.apellido : '' %>">
+                        <% if (typeof errores !== 'undefined' && errores.apellido) { %>
+                            <span class="form-error"><%= errores.apellido %></span>
+                        <% } %>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email" class="form-label">Correo electrónico</label>
+                    <input type="email" name="email" id="email"
+                           class="form-control <%= (typeof errores !== 'undefined' && errores.email) ? 'invalid' : '' %>"
+                           placeholder="usuario@ejemplo.com"
+                           value="<%= (typeof valores !== 'undefined' && valores.email) ? valores.email : '' %>">
+                    <% if (typeof errores !== 'undefined' && errores.email) { %>
+                        <span class="form-error"><%= errores.email %></span>
+                    <% } %>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" name="password" id="password"
+                           class="form-control <%= (typeof errores !== 'undefined' && errores.password) ? 'invalid' : '' %>"
+                           placeholder="Mínimo 6 caracteres con letras y números"
+                           autocomplete="new-password">
+                    <% if (typeof errores !== 'undefined' && errores.password) { %>
+                        <span class="form-error"><%= errores.password %></span>
+                    <% } %>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmarPassword" class="form-label">Confirmar contraseña</label>
+                    <input type="password" name="confirmarPassword" id="confirmarPassword"
+                           class="form-control <%= (typeof errores !== 'undefined' && errores.confirmarPassword) ? 'invalid' : '' %>"
+                           placeholder="Repite tu contraseña"
+                           autocomplete="new-password">
+                    <% if (typeof errores !== 'undefined' && errores.confirmarPassword) { %>
+                        <span class="form-error"><%= errores.confirmarPassword %></span>
+                    <% } %>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <span class="material-symbols-outlined">person_add</span> Crear cuenta
+                </button>
+            </form>
+
+            <p class="login-alt">¿Ya tienes una cuenta? <a href="/auth/login">Inicia sesión</a></p>
+        </div>
+    </div>
+</section>

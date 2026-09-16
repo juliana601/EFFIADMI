@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof titulo !== 'undefined' ? titulo : 'EFFIADMI' %> | EFFIADMI</title>
+    <link rel="icon" type="image/png" href="/img/logoeffiadmi.png">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+</head>
+<body>
+    <div class="app-layout" id="appLayout">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <%- include('partials/sidebar') %>
+
+        <main class="main-viewport">
+            <button class="menu-toggle" id="menuToggle" aria-label="Abrir menú">
+                <span class="material-symbols-outlined">menu</span>
+            </button>
+            <div class="contenedor-dinamico">
+                <%- include('partials/flash') %>
+                <%- body %>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

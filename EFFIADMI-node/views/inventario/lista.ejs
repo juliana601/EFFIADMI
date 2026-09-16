@@ -1,0 +1,80 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Inventario</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="GET" class="filtros-inventario">
+                <div class="form-group">
+                    <label for="sucursal" class="form-label">Sucursal</label>
+                    <select id="sucursal" name="sucursal" class="form-control">
+                        <option value="">Todas</option>
+                        <% sucursales.forEach(function(s) { %>
+                            <option value="<%= s._id %>" <%= sucursalSeleccionada === s._id.toString() ? 'selected' : '' %>>
+                                <%= s.nombre %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="categoria" class="form-label">Categoría</label>
+                    <select id="categoria" name="categoria" class="form-control">
+                        <option value="">Todas</option>
+                        <% categorias.forEach(function(cat) { %>
+                            <option value="<%= cat._id %>" <%= categoriaSeleccionada === cat._id.toString() ? 'selected' : '' %>>
+                                <%= cat.nombre %>
+                            </option>
+                        <% }); %>
+                    </select>
+                </div>
+                <div class="filtro-acciones">
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Producto</th>
+                    <th>Categoría</th>
+                    <th>Sucursal</th>
+                    <th>Stock Disponible</th>
+                    <th>Stock Mínimo</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% inventario.forEach(function(item) { %>
+                    <tr>
+                        <td><%= item.product.sku %></td>
+                        <td><%= item.product.nombre %></td>
+                        <td><%= item.product.categoria ? item.product.categoria.nombre : '-' %></td>
+                        <td><%= item.branch.nombre %></td>
+                        <td>
+                            <% if (item.cantidad_disponible <= item.stock_minimo) { %>
+                                <span class="stock-bajo"><%= item.cantidad_disponible %></span>
+                            <% } else { %>
+                                <%= item.cantidad_disponible %>
+                            <% } %>
+                        </td>
+                        <td><%= item.stock_minimo %></td>
+                        <td class="acciones">
+                            <a href="/inventario/<%= item._id %>/" class="btn btn-outline btn-sm">Detalle</a>
+                            <a href="/inventario/<%= item._id %>/movimiento" class="btn btn-outline btn-sm">Movimiento</a>
+                        </td>
+                    </tr>
+                <% }); %>
+                <% if (inventario.length === 0) { %>
+                    <tr>
+                        <td colspan="7" class="tabla-vacia">No hay productos en inventario.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</section>

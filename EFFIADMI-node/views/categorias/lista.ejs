@@ -1,0 +1,51 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Categorías</h1>
+        <a href="/categorias/crear" class="btn btn-primary">+ Nueva Categoría</a>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Productos</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% categorias.forEach(function(cat) { %>
+                    <tr>
+                        <td><%= cat.nombre %></td>
+                        <td><%= cat.total_productos %></td>
+                        <td>
+                            <% if (cat.activa) { %>
+                                <span class="estado activo">Activa</span>
+                            <% } else { %>
+                                <span class="estado inactivo">Inactiva</span>
+                            <% } %>
+                        </td>
+                        <td class="acciones">
+                            <a href="/categorias/<%= cat._id %>/editar" class="btn btn-outline btn-sm">Editar</a>
+                            <% if (cat.total_productos > 0) { %>
+                                <span class="btn btn-outline btn-sm" title="No se puede eliminar porque tiene <%= cat.total_productos %> producto(s) asignado(s)"
+                                      style="color: #8B849E; border-color: #E8E0F2; cursor: not-allowed;">Eliminar</span>
+                            <% } else { %>
+                                <form method="POST" action="/categorias/<%= cat._id %>/eliminar" class="inline-form"
+                                      onsubmit="return confirm('¿Estás seguro de eliminar la categoría \'<%= cat.nombre %>\'? Esta acción no se puede deshacer.');">
+                                    <button type="submit" class="btn btn-outline btn-sm btn-danger-text">Eliminar</button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }); %>
+                <% if (categorias.length === 0) { %>
+                    <tr>
+                        <td colspan="4" class="tabla-vacia">No hay categorías registradas.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</section>

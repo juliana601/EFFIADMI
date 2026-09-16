@@ -1,0 +1,53 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Registrar Movimiento</h1>
+        <a href="/inventario/<%= inventario._id %>/" class="btn btn-outline">Volver</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div class="detalle-grid">
+                <div class="form-group">
+                    <p><strong>Producto:</strong> <%= inventario.product.nombre %></p>
+                </div>
+                <div class="form-group">
+                    <p><strong>Sucursal:</strong> <%= inventario.branch.nombre %></p>
+                </div>
+                <div class="form-group">
+                    <p><strong>Stock actual:</strong> <%= inventario.cantidad_disponible %></p>
+                </div>
+                <div class="form-group">
+                    <p><strong>Stock mínimo:</strong> <%= inventario.stock_minimo %></p>
+                </div>
+            </div>
+
+            <form method="POST" action="/inventario/<%= inventario._id %>/movimiento">
+                <div class="form-group">
+                    <label for="tipo_movimiento" class="form-label">Tipo de Movimiento</label>
+                    <select id="tipo_movimiento" name="tipo_movimiento" class="form-control" required>
+                        <option value="ENTRADA">Entrada (Compra/Devolución)</option>
+                        <option value="SALIDA">Salida (Venta/Daño)</option>
+                        <option value="AJUSTE">Ajuste (Corrección)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="cantidad" class="form-label">Cantidad</label>
+                    <input type="number" id="cantidad" name="cantidad" class="form-control" min="1" required>
+                    <small class="form-help">Para los ajustes se tomará este valor como el nuevo stock disponible.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="motivo" class="form-label">Motivo / Observaciones</label>
+                    <textarea id="motivo" name="motivo" class="form-control" rows="3"
+                              placeholder="Ej: Compra al proveedor X, venta cliente Y, daño por humedad..."></textarea>
+                </div>
+
+                <div class="card-footer">
+                    <a href="/inventario/<%= inventario._id %>/" class="btn btn-outline">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">Registrar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>

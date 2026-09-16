@@ -1,0 +1,37 @@
+<section class="login-page">
+    <div class="login-panel">
+        <div class="login-form-wrap">
+            <h2>Iniciar sesión</h2>
+            <p>Introduce tus credenciales para acceder al sistema EFFIADMI.</p>
+
+            <form method="post" action="/auth/login">
+                <div class="form-group">
+                    <label for="username" class="form-label">Correo electrónico</label>
+                    <input type="text" name="username" id="username"
+                           class="form-control <%= (typeof errores !== 'undefined' && errores.username) ? 'invalid' : '' %>"
+                           placeholder="usuario@ejemplo.com"
+                           value="<%= (typeof valores !== 'undefined' && valores.username) ? valores.username : '' %>">
+                    <% if (typeof errores !== 'undefined' && errores.username) { %>
+                        <span class="form-error"><%= errores.username %></span>
+                    <% } %>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">Contraseña</label>
+                    <input type="password" name="password" id="password"
+                           class="form-control <%= (typeof errores !== 'undefined' && errores.password) ? 'invalid' : '' %>"
+                           placeholder="Tu contraseña">
+                    <% if (typeof errores !== 'undefined' && errores.password) { %>
+                        <span class="form-error"><%= errores.password %></span>
+                    <% } %>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-lg">
+                    <span class="material-symbols-outlined">login</span> Iniciar Sesión
+                </button>
+            </form>
+
+            <p class="login-alt">¿No tienes una cuenta? <a href="/auth/registro">Regístrate</a></p>
+        </div>
+    </div>
+</section>

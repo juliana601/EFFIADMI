@@ -1,0 +1,37 @@
+<section class="dashboard">
+    <h1>Panel principal</h1>
+    <p class="subtitulo">
+        ¡Bienvenido, <strong><%= usuarioSesion.nombre %></strong>!
+        Sesión iniciada como <span class="badge-rol <%= usuarioSesion.rol %>"><%= usuarioSesion.rol %></span>
+    </p>
+
+    <div class="tarjetas">
+        <div class="tarjeta">
+            <h3>Productos</h3>
+            <p class="tarjeta-valor">--</p>
+            <a href="#" class="btn btn-outline">Gestionar</a>
+        </div>
+        <div class="tarjeta">
+            <h3>Clientes</h3>
+            <p class="tarjeta-valor">--</p>
+            <a href="#" class="btn btn-outline">Gestionar</a>
+        </div>
+        <div class="tarjeta">
+            <h3>Inventario</h3>
+            <p class="tarjeta-valor">--</p>
+            <a href="#" class="btn btn-outline">Gestionar</a>
+        </div>
+        <div class="tarjeta">
+            <h3>Pedidos</h3>
+            <p class="tarjeta-valor">--</p>
+            <a href="#" class="btn btn-outline">Gestionar</a>
+        </div>
+    </div>
+
+    <% if (usuarioSesion.rol === 'admin') { %>
+        <div class="bloque-admin">
+            <h2>Zona de administración</h2>
+            <p>Módulos exclusivos para administradores: usuarios, proveedores, categorías y reportes.</p>
+        </div>
+    <% } %>
+</section>

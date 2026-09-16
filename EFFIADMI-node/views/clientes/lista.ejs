@@ -1,0 +1,47 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Listado de Clientes</h1>
+        <a href="/clientes/crear" class="btn btn-primary">+ Nuevo Cliente</a>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% clientes.forEach(function(cliente) { %>
+                    <tr>
+                        <td><%= cliente.nombre %></td>
+                        <td><%= cliente.correo %></td>
+                        <td><%= cliente.telefono %></td>
+                        <td><%= cliente.direccion %></td>
+                        <td>
+                            <% if (cliente.activo) { %>
+                                <span class="estado activo">Activo</span>
+                            <% } else { %>
+                                <span class="estado inactivo">Inactivo</span>
+                            <% } %>
+                        </td>
+                        <td class="acciones">
+                            <a href="/clientes/<%= cliente._id %>" class="btn btn-outline btn-sm">Ver</a>
+                            <a href="/clientes/<%= cliente._id %>/editar" class="btn btn-outline btn-sm">Editar</a>
+                        </td>
+                    </tr>
+                <% }); %>
+                <% if (clientes.length === 0) { %>
+                    <tr>
+                        <td colspan="6" class="tabla-vacia">No hay clientes registrados.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</section>

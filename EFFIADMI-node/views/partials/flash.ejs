@@ -1,0 +1,19 @@
+<% if (messages && (messages.success || messages.error || messages.warning)) { %>
+    <div class="flash-container">
+        <% if (messages.success) { %>
+            <% messages.success.forEach(function(msg) { %>
+                <div class="alert alert-success"><%= msg %></div>
+            <% }); %>
+        <% } %>
+        <% if (messages.error) { %>
+            <% messages.error.forEach(function(msg) { %>
+                <div class="alert alert-error"><%= msg %></div>
+            <% }); %>
+        <% } %>
+        <% if (messages.warning) { %>
+            <% messages.warning.forEach(function(msg) { %>
+                <div class="alert alert-warning"><%= msg %></div>
+            <% }); %>
+        <% } %>
+    </div>
+<% } %>

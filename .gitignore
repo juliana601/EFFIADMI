@@ -1,7 +1,0 @@
-# Dependencias
-node_modules/
-
-# Variables de entorno (no se suben al repositorio)
-.env
-
-

@@ -1,0 +1,70 @@
+<section class="pagina-modulo">
+    <div class="cabecera-modulo">
+        <h1>Gestión de Facturas</h1>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <form method="GET" class="filtros-inventario">
+                <div class="form-group">
+                    <label for="estado" class="form-label">Estado</label>
+                    <select id="estado" name="estado" class="form-control" onchange="this.form.submit()">
+                        <option value="">Todas</option>
+                        <option value="emitida" <%= filtroEstado === 'emitida' ? 'selected' : '' %>>Emitidas</option>
+                        <option value="anulada" <%= filtroEstado === 'anulada' ? 'selected' : '' %>>Anuladas</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Cliente</th>
+                    <th>Pedido</th>
+                    <th>Fecha</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% facturas.forEach(function(factura) { %>
+                    <tr>
+                        <td>#<%= factura.numero %></td>
+                        <td><%= factura.cliente ? factura.cliente.nombre : '-' %></td>
+                        <td><%= factura.pedido ? 'PED-' + factura.pedido.numero : '-' %></td>
+                        <td><%= fmtFecha(factura.createdAt) %></td>
+                        <td><%= cop(factura.total) %></td>
+                        <td>
+                            <% if (factura.estado === 'emitida') { %>
+                                <span class="factura-estado emitida">Emitida</span>
+                            <% } else { %>
+                                <span class="factura-estado anulada">Anulada</span>
+                            <% } %>
+                        </td>
+                        <td class="acciones">
+                            <a href="/facturas/<%= factura._id %>/" class="btn btn-outline btn-sm">Ver</a>
+                            <% if (factura.estado === 'emitida' && session.rol === 'admin') { %>
+                                <form method="POST" action="/facturas/<%= factura._id %>/anular" class="inline-form"
+                                      onsubmit="return confirm('Anular esta factura?');">
+                                    <button type="submit" class="btn btn-outline btn-sm btn-danger-text">Anular</button>
+                                </form>
+                            <% } %>
+                        </td>
+                    </tr>
+                <% }); %>
+                <% if (facturas.length === 0) { %>
+                    <tr>
+                        <td colspan="7" class="tabla-vacia">
+                            No hay facturas <% if (filtroEstado) { %>con estado "<%= filtroEstado %>"<% } %> registradas.
+                        </td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</section>
