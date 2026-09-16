@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: effiadmi
+    runtime: node
+    plan: free
+    rootDir: EFFIADMI-node
+    buildCommand: npm install
+    startCommand: node index.js
+    healthCheckPath: /auth/login
+    envVars:
+      - key: MONGODB_URI
+        sync: false
+        required: true
+      - key: SESSION_SECRET
+        sync: false
+        required: true
