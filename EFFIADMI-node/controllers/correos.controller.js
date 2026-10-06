@@ -78,6 +78,25 @@ const enviarCorreoHandler = async (req, res) => {
     }
 };
 
+// ==================== DETALLE ====================
+const verCorreo = async (req, res) => {
+    try {
+        const correo = await CorreoEnviado.findById(req.params.id).populate('creadoPor', 'nombre email');
+        if (!correo) {
+            req.flash('error', 'Correo no encontrado.');
+            return res.redirect('/correos');
+        }
+        return res.render('correos/detalle', {
+            titulo: 'Correo',
+            correo,
+            rutaActiva: 'correos',
+        });
+    } catch (error) {
+        req.flash('error', `Error al abrir el correo: ${error.message}`);
+        return res.redirect('/correos');
+    }
+};
+
 // ==================== MARCAR COMO LEÍDO ====================
 const marcarLeido = async (req, res) => {
     try {
@@ -104,6 +123,7 @@ module.exports = {
     listaCorreos,
     renderEnviarCorreo,
     enviarCorreoHandler,
+    verCorreo,
     marcarLeido,
     eliminarCorreo,
 };

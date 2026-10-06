@@ -12,6 +12,6 @@ router.post('/:id/leer', requireLogin, notificacionesController.marcarLeida);
 router.post('/:id/eliminar', requireLogin, notificacionesController.eliminarNotificacion);
 
 // ==================== API ====================
-router.get('/api/no-leidas', requireLoginApi, notificacionesController.apiNoLeidas);
+router.get('/api/no-leidas', requireLoginApi, notificacionesController.apiContadorNoLeidas);
 
 module.exports = router;

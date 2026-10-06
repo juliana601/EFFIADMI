@@ -3,14 +3,14 @@ const router = express.Router();
 
 const facturasCompraController = require('../controllers/facturasCompra.controller');
 const { requireLogin } = require('../middleware/auth');
-const { requireRole } = require('../middleware/auth');
+const { requireRole } = require('../middleware/roles');
 
 // ==================== VISTAS ====================
-router.get('/', requireLogin, facturasCompraController.listaFacturas);
-router.get('/crear', requireLogin, facturasCompraController.renderCrear);
-router.post('/crear', requireLogin, facturasCompraController.crearFactura);
-router.get('/:id', requireLogin, facturasCompraController.verFactura);
-router.get('/exportar/excel', requireLogin, facturasCompraController.exportarExcel争);
-router.post('/:id/eliminar', requireLogin, requireRole('ADMIN'), facturasCompraController.eliminarFactura);
+router.get('/', requireLogin, facturasCompraController.listaFacturasCompra);
+router.get('/crear', requireLogin, facturasCompraController.renderCrearFacturaCompra);
+router.post('/crear', requireLogin, facturasCompraController.crearFacturaCompra);
+router.get('/exportar/excel', requireLogin, facturasCompraController.exportarExcel);
+router.get('/:id', requireLogin, facturasCompraController.detalleFacturaCompra);
+router.post('/:id/eliminar', requireLogin, requireRole('admin'), facturasCompraController.eliminarFacturaCompra);
 
 module.exports = router;

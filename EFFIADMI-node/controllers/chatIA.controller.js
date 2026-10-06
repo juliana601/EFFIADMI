@@ -1,5 +1,5 @@
 const ChatHistorial = require('../models/ChatHistorial');
-const { consultarAsistenteEFFIADMI } = require('../utils/servicio_ia');
+const { consultarAsistenteEffiadmi: consultarAsistenteEFFIADMI } = require('../utils/servicio_ia');
 
 // ==================== RENDER VISTA + HISTORIAL ====================
 const renderChat = async (req, res) => {

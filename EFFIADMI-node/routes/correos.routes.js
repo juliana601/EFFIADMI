@@ -6,8 +6,8 @@ const { requireLogin } = require('../middleware/auth');
 
 // ==================== VISTAS ====================
 router.get('/', requireLogin, correosController.listaCorreos);
-router.get('/enviar', requireLogin, correosController.renderEnviar);
-router.post('/enviar', requireLogin, correosController.enviarCorreo);
+router.get('/enviar', requireLogin, correosController.renderEnviarCorreo);
+router.post('/enviar', requireLogin, correosController.enviarCorreoHandler);
 router.get('/:id', requireLogin, correosController.verCorreo);
 router.post('/:id/leer', requireLogin, correosController.marcarLeido);
 router.post('/:id/eliminar', requireLogin, correosController.eliminarCorreo);

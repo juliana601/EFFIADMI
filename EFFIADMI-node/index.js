@@ -25,6 +25,7 @@ const correosRoutes = require('./routes/correos.routes');
 const facturasCompraRoutes = require('./routes/facturasCompra.routes');
 const chatRoutes = require('./routes/chat.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
+const logs = require('./utils/logs');
 
 const app = express();
 
@@ -84,6 +85,13 @@ const upload = multer({
     limits: { fileSize: 10 * 1024 * 1024 },
 });
 
+// ==================== REGISTRO DE ACTIVIDAD (logs) ====================
+app.use((req, res, next) => {
+    const usuario = req.session.logueado ? req.session.logueado.nombre : 'No logueado';
+    logs.escribir(`${req.method} ${req.originalUrl}`, usuario);
+    next();
+});
+
 // ==================== RUTAS ====================
 app.use('/auth', authRoutes);
 app.use('/usuarios', usuariosRoutes);
@@ -129,6 +137,9 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
     console.log(`Servidor EFFIADMI ejecutándose en el puerto ${PORT}`);
+    logs.iniciar((err) => {
+        if (!err) logs.escribir(`Servidor iniciado en el puerto ${PORT}`, 'Sistema');
+    });
 });
 
 module.exports = app;
