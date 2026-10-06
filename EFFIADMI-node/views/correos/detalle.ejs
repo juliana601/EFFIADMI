@@ -1,0 +1,45 @@
+<div class="page-header">
+    <div class="page-header-title">
+        <h1>Correo</h1>
+        <p><%= correo.asunto %></p>
+    </div>
+    <div class="page-header-actions">
+        <a href="/correos" class="btn btn-outline">
+            <span class="material-symbols-outlined">arrow_back</span> Volver
+        </a>
+        <form method="POST" action="/correos/<%= correo._id %>/eliminar" class="inline-form">
+            <button type="submit" class="btn btn-danger">
+                <span class="material-symbols-outlined">delete</span> Eliminar
+            </button>
+        </form>
+    </div>
+</div>
+
+<section class="card">
+    <div class="card-body">
+        <div class="detalle-grid">
+            <div class="detalle-item">
+                <span class="detalle-etiqueta">Para</span>
+                <strong><%= correo.para %></strong>
+            </div>
+            <div class="detalle-item">
+                <span class="detalle-etiqueta">Asunto</span>
+                <strong><%= correo.asunto %></strong>
+            </div>
+            <div class="detalle-item">
+                <span class="detalle-etiqueta">Enviado</span>
+                <strong><%= fmtFecha(correo.createdAt || correo.fecha) %></strong>
+            </div>
+            <div class="detalle-item">
+                <span class="detalle-etiqueta">Estado</span>
+                <strong><span class="badge <%= correo.leido ? 'badge-success' : 'badge-warning' %>"><%= correo.leido ? 'Leído' : 'No leído' %></span></strong>
+            </div>
+        </div>
+
+        <hr class="divider">
+
+        <div class="correo-cuerpo">
+            <p><%= correo.cuerpo %></p>
+        </div>
+    </div>
+</section>

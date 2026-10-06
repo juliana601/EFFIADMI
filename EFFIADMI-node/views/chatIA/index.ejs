@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <%- include('../partials/head', { titulo: 'Asistente EEFI IA', descripcion: 'Consulta el asistente inteligente de EFFIADMI' }) %>
+    <link rel="stylesheet" href="/css/chat.css">
+</head>
+<body>
+    <%- include('../partials/header', { rutaActiva: 'chatIA' }) %>
+
+    <main class="layout-main sidebar-visible">
+        <%- include('../partials/sidebar', { rutaActiva: 'chatIA' }) %>
+
+        <section class="content">
+            <div class="page-header">
+                <div class="page-header-title">
+                    <h1>Asistente EEFI</h1>
+                    <p>Pregúntame sobre tu inventario, clientes y ventas</p>
+                </div>
+                <div class="page-header-actions">
+                    <form method="POST" action="/chat-ia/borrar-historial">
+                        <button type="submit" class="btn btn-outline btn-danger">
+                            <span class="material-symbols-outlined">delete_sweep</span> Borrar historial
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <section class="card chat-card">
+                <div class="chat-historial" id="chatHistorial">
+                    <% if (!historial || historial.length === 0) { %>
+                        <div class="chat-vacio">
+                            <span class="material-symbols-outlined" style="font-size:3rem">smart_toy</span>
+                            <h3>¿En qué puedo ayudarte?</h3>
+                            <p>Ej: "¿Cuántos productos tienen stock bajo?" o "¿Cuál fue la venta de hoy?"</p>
+                        </div>
+                    <% } else { %>
+                        <% historial.forEach(function (m) { %>
+                            <div class="chat-mensaje chat-mensaje-usuario">
+                                <span class="material-symbols-outlined">person</span>
+                                <div class="chat-burbuja">
+                                    <strong>Tú</strong>
+                                    <p><%= m.mensajeUsuario %></p>
+                                </div>
+                            </div>
+                            <div class="chat-mensaje chat-mensaje-ia">
+                                <span class="material-symbols-outlined">smart_toy</span>
+                                <div class="chat-burbuja chat-burbuja-ia">
+                                    <strong>EEFI</strong>
+                                    <p><%= m.respuestaIA %></p>
+                                </div>
+                            </div>
+                        <% }) %>
+                    <% } %>
+                </div>
+
+                <form method="POST" action="/chat-ia/enviar" class="chat-form">
+                    <input
+                        type="text"
+                        name="mensaje"
+                        placeholder="Escribe tu pregunta…"
+                        required
+                        autocomplete="off"
+                        autofocus>
+                    <button type="submit" class="btn btn-primary btn-icon" title="Enviar">
+                        <span class="material-symbols-outlined">send</span>
+                    </button>
+                </form>
+            </section>
+        </section>
+    </main>
+
+    <script>
+        (function () {
+            var cont = document.getElementById('chatHistorial');
+            if (cont) cont.scrollTop = cont.scrollHeight;
+        })();
+    </script>
+</body>
+</html>

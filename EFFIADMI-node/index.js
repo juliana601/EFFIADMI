@@ -7,6 +7,7 @@ const session = require('express-session');
 const morgan = require('morgan');
 const flash = require('connect-flash');
 const expressLayouts = require('express-ejs-layouts');
+const multer = require('multer');
 
 const authRoutes = require('./routes/auth.routes');
 const usuariosRoutes = require('./routes/usuarios.routes');
@@ -19,6 +20,11 @@ const pedidosRoutes = require('./routes/pedidos.routes');
 const facturasRoutes = require('./routes/facturas.routes');
 const estadisticasRoutes = require('./routes/estadisticas.routes');
 const reportesRoutes = require('./routes/reportes.routes');
+const notificacionesRoutes = require('./routes/notificaciones.routes');
+const correosRoutes = require('./routes/correos.routes');
+const facturasCompraRoutes = require('./routes/facturasCompra.routes');
+const chatRoutes = require('./routes/chat.routes');
+const dashboardRoutes = require('./routes/dashboard.routes');
 
 const app = express();
 
@@ -66,6 +72,17 @@ app.set('layout', 'layout');
 
 // ==================== ARCHIVOS ESTÁTICOS ====================
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+
+// ==================== SUBIDA DE ARCHIVOS (multer) ====================
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!require('fs').existsSync(uploadsDir)) {
+    require('fs').mkdirSync(uploadsDir, { recursive: true });
+}
+const upload = multer({
+    dest: uploadsDir,
+    limits: { fileSize: 10 * 1024 * 1024 },
+});
 
 // ==================== RUTAS ====================
 app.use('/auth', authRoutes);
@@ -79,6 +96,11 @@ app.use('/pedidos', pedidosRoutes);
 app.use('/facturas', facturasRoutes);
 app.use('/estadisticas', estadisticasRoutes);
 app.use('/reportes', reportesRoutes);
+app.use('/notificaciones', notificacionesRoutes);
+app.use('/correos', correosRoutes);
+app.use('/facturas-compra', facturasCompraRoutes);
+app.use('/chat-ia', chatRoutes);
+app.use('/dashboard', dashboardRoutes);
 
 app.get('/', (req, res) => {
     if (req.session.logueado) {

@@ -1,0 +1,64 @@
+<div class="page-header">
+    <div class="page-header-title">
+        <h1>Correos enviados</h1>
+        <p>Historial de mensajes de correo registrados en el sistema</p>
+    </div>
+    <div class="page-header-actions">
+        <a href="/correos/enviar" class="btn btn-primary">
+            <span class="material-symbols-outlined">mail_add</span> Enviar correo
+        </a>
+    </div>
+</div>
+
+<div class="filter-bar">
+    <a href="/correos" class="badge <%= typeof filtroEstado === 'undefined' || filtroEstado === '' || filtroEstado === 'todos' ? 'badge-active' : '' %>">Todos</a>
+    <a href="/correos?estado=noLeidos" class="badge <%= filtroEstado === 'noLeidos' ? 'badge-active' : '' %>">No leídos</a>
+    <a href="/correos?estado=leidos" class="badge <%= filtroEstado === 'leidos' ? 'badge-active' : '' %>">LeÍdos</a>
+</div>
+
+<section class="card">
+    <div class="card-body">
+        <% if (correos.length === 0) { %>
+            <div class="empty-state">
+                <span class="material-symbols-outlined" style="font-size:3rem">mark_email_unread</span>
+                <h3>No hay correos enviados</h3>
+                <p>Comienza a enviar correos desde el botón superior.</p>
+            </div>
+        <% } else { %>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Para</th>
+                        <th>Asunto</th>
+                        <th>Fecha</th>
+                        <th>Estado</th>
+                        <th class="text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% correos.forEach(function (c) { %>
+                        <tr>
+                            <td><%= c.para %></td>
+                            <td>
+                                <a href="/correos/<%= c._id %>" class="table-link"><%= c.asunto %></a>
+                                <% if (!c.leido) { %><span class="badge badge-neutro">nuevo</span><% } %>
+                            </td>
+                            <td><%= fmtFecha(c.createdAt) %></td>
+                            <td><%= c.leido ? 'LeÍdo' : 'No leído' %></td>
+                            <td class="text-right">
+                                <a href="/correos/<%= c._id %>" class="btn-icon" title="Ver">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </a>
+                                <form method="POST" action="/correos/<%= c._id %>/eliminar" class="inline-form">
+                                    <button type="submit" class="btn-icon btn-icon-danger" title="Eliminar">
+                                        <span class="material-symbols-outlined">delete</span>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</section>

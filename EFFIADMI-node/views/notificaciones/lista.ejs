@@ -1,0 +1,64 @@
+<div class="page-header">
+    <div class="page-header-title">
+        <h1>Notificaciones</h1>
+        <p>Mantente al día con los movimientos del sistema</p>
+    </div>
+    <div class="page-header-actions">
+        <form method="POST" action="/notificaciones/marcar-todas">
+            <button type="submit" class="btn btn-outline">
+                <span class="material-symbols-outlined">done_all</span> Marcar todas como leídas
+            </button>
+        </form>
+    </div>
+</div>
+
+<div class="filter-bar">
+    <a href="/notificaciones" class="badge <%= typeof filtroEstado === 'undefined' || filtroEstado === '' || filtroEstado === 'todas' ? 'badge-active' : '' %>">Todas</a>
+    <a href="/notificaciones?estado=noLeidas" class="badge <%= filtroEstado === 'noLeidas' ? 'badge-active' : '' %>">No leídas</a>
+    <a href="/notificaciones?estado=leidas" class="badge <%= filtroEstado === 'leidas' ? 'badge-active' : '' %>">LeÍdas</a>
+</div>
+
+<section class="card">
+    <div class="card-body">
+        <% if (notificaciones.length === 0) { %>
+            <div class="empty-state">
+                <span class="material-symbols-outlined" style="font-size:3rem">notifications_off</span>
+                <h3>No hay notificaciones</h3>
+                <p>Cuando ocurran movimientos importantes se mostrarán aquí.</p>
+            </div>
+        <% } else { %>
+            <div class="notificaciones-list">
+                <% notificaciones.forEach(function (n) { %>
+                    <div class="notificacion-item <%= n.leido ? '' : 'notificacion-no-leida' %>">
+                        <div class="notificacion-icon">
+                            <span class="material-symbols-outlined"><%= n.enlace ? 'link' : 'info' %></span>
+                        </div>
+                        <div class="notificacion-contenido">
+                            <p class="notificacion-mensaje"><%= n.mensaje %></p>
+                            <span class="notificacion-fecha"><%= fmtFecha(n.createdAt) %></span>
+                        </div>
+                        <div class="notificacion-acciones">
+                            <% if (!n.leido) { %>
+                                <form method="POST" action="/notificaciones/<%= n._id %>/leer">
+                                    <button type="submit" class="btn-icon" title="Marcar como leída">
+                                        <span class="material-symbols-outlined">mark_email_read</span>
+                                    </button>
+                                </form>
+                            <% } %>
+                            <% if (n.enlace) { %>
+                                <a href="<%= n.enlace %>" class="btn-icon" title="Ver">
+                                    <span class="material-symbols-outlined">open_in_new</span>
+                                </a>
+                            <% } %>
+                            <form method="POST" action="/notificaciones/<%= n._id %>/eliminar">
+                                <button type="submit" class="btn-icon btn-icon-danger" title="Eliminar">
+                                    <span class="material-symbols-outlined">delete</span>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        <% } %>
+    </div>
+</section>

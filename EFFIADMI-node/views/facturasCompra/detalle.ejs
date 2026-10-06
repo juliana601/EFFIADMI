@@ -1,0 +1,106 @@
+<div class="page-header">
+    <div class="page-header-title">
+        <h1>Detalle de factura de compra</h1>
+        <p>Número <%= factura.numeroFactura %></p>
+    </div>
+    <div class="page-header-actions">
+        <a href="/facturas-compra" class="btn btn-outline">
+            <span class="material-symbols-outlined">arrow_back</span> Volver
+        </a>
+        <% if (session.rol === 'admin') { %>
+            <form method="POST" action="/facturas-compra/<%= factura._id %>/eliminar" class="inline-form">
+                <button type="submit" class="btn btn-danger">
+                    <span class="material-symbols-outlined">delete</span> Eliminar
+                </button>
+            </form>
+        <% } %>
+    </div>
+</div>
+
+<section class="card">
+    <div class="card-body">
+        <div class="detalle-grid">
+            <div class="detalle-item">
+                <span class="detalle-etiqueta">Proveedor</span>
+                <strong><%= factura.proveedor ? factura.proveedor.nombre : '-' %></strong>
+            </div>
+            <div class="detalle-item">
+                <span class="detalle-etiqueta">Número de factura</span>
+                <strong><%= factura.numeroFactura %></strong>
+            </div>
+            <div class="detalle-item">
+                <span class="detalle-etiqueta">Fecha de emisión</span>
+                <strong><%= fmtFecha(factura.fechaEmision || factura.fecha_emision) %></strong>
+            </div>
+            <div class="detalle-item">
+                <span class="detalle-etiqueta">Registrado por</span>
+                <strong><%= factura.registradoPor ? factura.registradoPor.nombre : '-' %></strong>
+            </div>
+        </div>
+    </div>
+</section>
+
+<% if (factura.notas) { %>
+    <section class="card">
+        <div class="card-header"><h3>Notas</h3></div>
+        <div class="card-body"><p><%= factura.notas %></p></div>
+    </section>
+<% } %>
+
+<% if (factura.archivoAdjunto) { %>
+    <section class="card">
+        <div class="card-header"><h3>Archivo adjunto</h3></div>
+        <div class="card-body">
+            <a href="/uploads/<%= typeof factura.archivoAdjunto === 'string' ? factura.archivoAdjunto : (factura.archivoAdjunto.filename || factura.archivoAdjunto.path || '') %>" target="_blank" class="btn btn-outline">
+                <span class="material-symbols-outlined">attach_file</span> Ver archivo
+            </a>
+        </div>
+    </section>
+<% } %>
+
+<section class="card">
+    <div class="card-header"><h3>Detalle de productos</h3></div>
+    <div class="card-body">
+        <% if (!detalles || detalles.length === 0) { %>
+            <div class="empty-state">
+                <span class="material-symbols-outlined">receipt_long</span>
+                <p>Sin líneas registradas.</p>
+            </div>
+        <% } else { %>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th class="text-right">Cantidad</th>
+                        <th class="text-right">Precio unitario</th>
+                        <th class="text-right">Subtotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% detalles.forEach(function (d) { %>
+                        <tr>
+                            <td><%= d.producto ? (d.producto.nombre || 'Producto') : '-' %></td>
+                            <td class="text-right"><%= d.cantidad %></td>
+                            <td class="text-right"><%= cop(d.precioUnitario) %></td>
+                            <td class="text-right"><%= cop((Number(d.cantidad) || 0) * (Number(d.precioUnitario) || 0)) %></td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" class="text-right"><strong>Subtotal</strong></td>
+                        <td class="text-right"><%= cop(factura.subtotal) %></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" class="text-right">IVA</td>
+                        <td class="text-right"><%= cop(factura.iva) %></td>
+                    </tr>
+                    <tr class="fila-total">
+                        <td colspan="3" class="text-right"><strong>Total</strong></td>
+                        <td class="text-right"><strong><%= cop(factura.total || factura.totalCalculado) %></strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        <% } %>
+    </div>
+</section>

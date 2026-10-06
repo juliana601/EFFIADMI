@@ -1,0 +1,60 @@
+<div class="page-header">
+    <div class="page-header-title">
+        <h1>Facturas de compra</h1>
+        <p>Registra los documentos de compra a proveedores</p>
+    </div>
+    <div class="page-header-actions">
+        <a href="/facturas-compra/crear" class="btn btn-primary">
+            <span class="material-symbols-outlined">add</span> Nueva factura
+        </a>
+    </div>
+</div>
+
+<section class="card">
+    <div class="card-body">
+        <% if (facturas.length === 0) { %>
+            <div class="empty-state">
+                <span class="material-symbols-outlined" style="font-size:3rem">receipt_long</span>
+                <h3>No hay facturas de compra</h3>
+                <p>Registra la primera factura de compra.</p>
+            </div>
+        <% } else { %>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Número</th>
+                        <th>Proveedor</th>
+                        <th>Fecha</th>
+                        <th class="text-right">Total</th>
+                        <th class="text-right">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% facturas.forEach(function (f) { %>
+                        <tr>
+                            <td><a href="/facturas-compra/<%= f._id %>" class="table-link"><%= f.numeroFactura %></a></td>
+                            <td><%= f.proveedor ? f.proveedor.nombre : '-' %></td>
+                            <td><%= fmtFecha(f.fechaEmision) %></td>
+                            <td class="text-right"><%= cop(f.total) %></td>
+                            <td class="text-right">
+                                <a href="/facturas-compra/<%= f._id %>" class="btn-icon" title="Ver">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                </a>
+                                <a href="/facturas-compra/exportar/excel" class="btn-icon" title="Exportar Excel">
+                                    <span class="material-symbols-outlined">download</span>
+                                </a>
+                                <% if (session.rol === 'admin') { %>
+                                    <form method="POST" action="/facturas-compra/<%= f._id %>/eliminar" class="inline-form">
+                                        <button type="submit" class="btn-icon btn-icon-danger" title="Eliminar">
+                                            <span class="material-symbols-outlined">delete</span>
+                                        </button>
+                                    </form>
+                                <% } %>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</section>

@@ -1,0 +1,71 @@
+<div class="page-header">
+    <div class="page-header-title">
+        <h1>Nueva factura de compra</h1>
+        <p>Registra una factura recibida de un proveedor</p>
+    </div>
+</div>
+
+<section class="card">
+    <div class="card-body">
+        <form method="POST" action="/facturas-compra/crear" class="form-grid">
+            <div class="form-group">
+                <label for="proveedor">Proveedor</label>
+                <select id="proveedor" name="proveedor" required>
+                    <option value="">-- Selecciona --</option>
+                    <% proveedores.forEach(function (p) { %>
+                        <option value="<%= p._id %>"><%= p.nombre %></option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="numeroFactura">Número de factura</label>
+                <input type="text" id="numeroFactura" name="numeroFactura" required placeholder="FAC-001">
+            </div>
+            <div class="form-group">
+                <label for="fechaEmision">Fecha de emisión</label>
+                <input type="date" id="fechaEmision" name="fechaEmision" required>
+            </div>
+            <div class="form-group form-group-full">
+                <label>Detalle de productos</label>
+                <div id="lineasContainer">
+                    <div class="linea-producto">
+                        <select name="producto[]">
+                            <option value="">-- Producto --</option>
+                            <% productos.forEach(function (pr) { %>
+                                <option value="<%= pr._id %>"><%= pr.nombre %></option>
+                            <% }) %>
+                        </select>
+                        <input type="number" name="cantidad[]" placeholder="Cantidad" min="1" value="1">
+                        <input type="number" step="0.01" name="precioUnitario[]" placeholder="Precio unit." min="0">
+                        <button type="button" class="btn-icon btn-add-linea" onclick="window.agregarLinea(this)">
+                            <span class="material-symbols-outlined">add</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-full">
+                <label for="notas">Notas</label>
+                <textarea id="notas" name="notas" rows="3" placeholder="Comentarios opcionales"></textarea>
+            </div>
+            <div class="form-actions form-group-full">
+                <a href="/facturas-compra" class="btn btn-outline">Cancelar</a>
+                <button type="submit" class="btn btn-primary">Guardar factura</button>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+    window.agregarLinea = function (btn) {
+        var fila = btn.closest('.linea-producto');
+        var clon = fila.cloneNode(true);
+        clon.querySelectorAll('input').forEach(function (i) { i.value = i.type === 'number' ? (i.value === '1' ? '1' : '') : ''; });
+        var boton = clon.querySelector('.btn-add-linea');
+        if (boton) {
+            boton.innerHTML = '<span class="material-symbols-outlined">close</span>';
+            boton.className = 'btn-icon btn-icon-danger btn-remove-linea';
+            boton.onclick = function () { clon.remove(); };
+        }
+        fila.parentNode.appendChild(clon);
+    };
+</script>
