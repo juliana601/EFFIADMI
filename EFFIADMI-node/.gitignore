@@ -1,6 +1,7 @@
 ﻿node_modules/
 uploads/
 backup/
+backup-*.zip
 .env
 *.log
 npm-debug.log*

@@ -34,8 +34,9 @@ const _correoDesdeCreadoPor = async (creadoPor) => {
 };
 
 // Envia un correo y lo registra en la BD.
+// adjuntos: opcional, arreglo de { filename, path } para archivos adjuntos.
 // Devuelve { exito, correo, simulacion }
-const enviarCorreo = async ({ para, asunto, cuerpo, tipo = 'custom', creadoPor = null }) => {
+const enviarCorreo = async ({ para, asunto, cuerpo, tipo = 'custom', creadoPor = null, adjuntos = null }) => {
     const correo = await CorreoEnviado.create({
         para,
         asunto,
@@ -52,12 +53,16 @@ const enviarCorreo = async ({ para, asunto, cuerpo, tipo = 'custom', creadoPor =
     }
 
     try {
-        await transporte.sendMail({
+        const opcionesCorreo = {
             from: `"${process.env.SMTP_FROM_NOMBRE || 'EFFIADMI'}" <${process.env.SMTP_USER}>`,
             to: para,
             subject: asunto,
             text: cuerpo,
-        });
+        };
+        if (adjuntos && adjuntos.length > 0) {
+            opcionesCorreo.attachments = adjuntos;
+        }
+        await transporte.sendMail(opcionesCorreo);
         await CorreoEnviado.findByIdAndUpdate(correo._id, { $set: { enviadoReal: true } });
         return { exito: true, simulacion: false, correo };
     } catch (error) {

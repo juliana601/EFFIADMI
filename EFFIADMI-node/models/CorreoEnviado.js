@@ -10,8 +10,11 @@ const correoEnviadoSchema = new mongoose.Schema(
         asunto: { type: String, required: true, trim: true },
         cuerpo: { type: String, required: true, trim: true },
         leido: { type: Boolean, default: false },
-        tipo: { type: String, enum: ['cliente', 'proveedor', 'custom'], default: 'custom' },
+        tipo: { type: String, enum: ['cliente', 'proveedor', 'custom', 'backup'], default: 'custom' },
         creadoPor: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+        simulacion: { type: Boolean, default: false },
+        enviadoReal: { type: Boolean, default: false },
+        errorEnvio: { type: String, default: null },
     },
     { timestamps: true }
 );
