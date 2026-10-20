@@ -1,5 +1,10 @@
-node_modules/
+﻿node_modules/
 uploads/
+backup/
 .env
 *.log
 npm-debug.log*
+
+# cache de la IA
+.cache/
+utils/.cache/

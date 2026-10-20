@@ -26,16 +26,23 @@ const facturasCompraRoutes = require('./routes/facturasCompra.routes');
 const chatRoutes = require('./routes/chat.routes');
 const dashboardRoutes = require('./routes/dashboard.routes');
 const logs = require('./utils/logs');
+const cronBackup = require('./services/cron');
+const backup = require('./services/backup');
 
 const app = express();
 
 // ==================== BASE DE DATOS ====================
+if (!process.env.MONGODB_URI) {
+    console.error('MONGODB_URI no está definido. Revisa tu archivo .env');
+    process.exit(1);
+}
+
 mongoose
     .connect(process.env.MONGODB_URI)
     .then(() => console.log('Conectado a MongoDB'))
     .catch((err) => {
         console.error('Error conectando a MongoDB:', err.message);
-        process.exit(1);
+        console.error('El servidor seguirá arrancando; revisa la conexión y recarga las páginas que usen la base de datos.');
     });
 
 // ==================== MIDDLEWARES ====================
@@ -128,6 +135,15 @@ app.get('/api/status', (req, res) => {
     });
 });
 
+app.post('/api/backup', async (req, res) => {
+    try {
+        await backup.backupDatabase();
+        res.json({ success: true, message: 'Respaldo completado' });
+    } catch (err) {
+        res.status(500).json({ success: false, message: err.message });
+    }
+});
+
 // ==================== MANEJO DE ERRORES 404 ====================
 app.use((req, res) => {
     res.status(404).json({ success: false, message: 'Ruta no encontrada' });
@@ -140,6 +156,7 @@ app.listen(PORT, () => {
     logs.iniciar((err) => {
         if (!err) logs.escribir(`Servidor iniciado en el puerto ${PORT}`, 'Sistema');
     });
+    cronBackup.iniciarBackup();
 });
 
 module.exports = app;
